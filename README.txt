@@ -79,3 +79,9 @@ images/
   product-longan.jpg
   product-passionfruit.jpg
   product-lychee.jpg
+
+
+v3.1 修正：
+- 結果圖不裁切
+- 分享圖不裁切
+- 補充 OG URL/Image 設定（需自行放入 images/share-cover.jpg）

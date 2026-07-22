@@ -314,7 +314,7 @@ async function createShareImageBlob() {
   ctx.save();
   ctx.clip();
   const image = await loadImage(result.image);
-  const ratio = Math.max(900 / image.width, 650 / image.height);
+  const ratio = Math.min(900 / image.width, 650 / image.height);
   const iw = image.width * ratio;
   const ih = image.height * ratio;
   ctx.drawImage(image, 90 + (900 - iw) / 2, 195 + (650 - ih) / 2, iw, ih);
