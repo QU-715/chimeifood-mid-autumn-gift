@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4df">
+  <meta name="description" content="完成 5 題心理測驗，找出與你最契合的奇美水果酥。">
+  <meta property="og:title" content="你的靈魂果酥是哪一款？｜奇美食品">
+  <meta property="og:description" content="透過 5 題直覺選擇，找出最懂你的命定水果酥。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/product-pineapple.jpg">
+  <title>你的靈魂果酥是哪一款？｜奇美食品</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 追蹤設定：請先在 config.js 填入 GA4 與 Meta Pixel ID -->
+  <script src="config.js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+
+    (function initGA4() {
+      const id = window.QUIZ_CONFIG && window.QUIZ_CONFIG.GA4_ID;
+      if (!id || id.includes("XXXXXXXX")) return;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+      document.head.appendChild(script);
+      gtag("js", new Date());
+      gtag("config", id, {
+        send_page_view: true,
+        anonymize_ip: true
+      });
+    })();
+
+    (function initMetaPixel() {
+      const id = window.QUIZ_CONFIG && window.QUIZ_CONFIG.META_PIXEL_ID;
+      if (!id || id.includes("XXXXXXXX")) return;
+      !function(f,b,e,v,n,t,s){
+        if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";
+        n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+        s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+      }(window, document,"script","https://connect.facebook.net/en_US/fbevents.js");
+      fbq("init", id);
+      fbq("track", "PageView");
+    })();
+  </script>
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <main class="app" id="app">
+    <section class="screen active" id="startScreen" aria-labelledby="startTitle">
+      <div class="panel hero-panel">
+        <div class="fruit-orbit" aria-hidden="true">
+          <span>🍍</span><span>🥭</span><span>🍊</span><span>❤️</span><span>🫐</span>
+        </div>
+        <p class="eyebrow">奇美食品水果酥禮盒系列</p>
+        <h1 id="startTitle">你的<span>靈魂果酥</span><br>是哪一款？</h1>
+        <p class="lead">透過 5 題直覺選擇，找出最懂你的命定水果酥。</p>
+        <button class="main-button" id="startButton" type="button">開始測驗 <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="screen" id="quizScreen" aria-live="polite">
+      <div class="panel quiz-panel">
+        <div class="quiz-topline">
+          <span id="progressLabel">第 1 題，共 5 題</span>
+          <span aria-hidden="true">✨</span>
+        </div>
+        <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+        <div class="question-icon" id="questionIcon">🌤️</div>
+        <h2 id="questionText"></h2>
+        <div class="options" id="options"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="resultScreen" aria-live="polite">
+      <div class="panel result-panel">
+        <p class="eyebrow">測驗完成</p>
+        <h2 class="result-heading">你的靈魂伴侶是</h2>
+        <div class="match-row">
+          <span class="match-label">契合度</span>
+          <strong id="matchNumber">95%</strong>
+        </div>
+
+        <article class="result-card" id="resultCard">
+          <img id="resultImage" src="" alt="" loading="eager" crossorigin="anonymous">
+          <div class="result-copy">
+            <p class="result-type" id="resultType"></p>
+            <h3 id="resultName"></h3>
+            <p id="resultQuote" class="result-quote"></p>
+            <p id="resultDescription" class="result-description"></p>
+            <div class="traits" id="resultTraits"></div>
+          </div>
+        </article>
+
+        <div class="gift-message">
+          <strong>快傳給你的朋友，<br>讓他送禮給你吧！🎁</strong>
+          <span>指定水果酥禮盒 2 件 9 折</span>
+        </div>
+
+        <div class="action-buttons" aria-label="結果操作">
+          <a class="action-btn buy" id="buyButton" href="https://reurl.cc/VnENgZ" target="_blank" rel="noopener noreferrer">
+            <span aria-hidden="true">🛒</span><span>立即購買</span>
+          </a>
+          <button class="action-btn share" id="shareButton" type="button">
+            <span aria-hidden="true">↗</span><span>分享結果</span>
+          </button>
+          <button class="action-btn retry" id="retryButton" type="button">
+            <span aria-hidden="true">↻</span><span>再測一次</span>
+          </button>
+        </div>
+        <p class="share-status" id="shareStatus" role="status"></p>
+      </div>
+    </section>
+
+    <footer>奇美食品水果酥禮盒系列｜把喜歡的滋味分享給重要的人</footer>
+  </main>
+
+  <div class="share-modal" id="shareModal" hidden>
+    <div class="share-backdrop" data-close-share></div>
+    <section class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <button class="share-close" type="button" aria-label="關閉" data-close-share>×</button>
+      <h2 id="shareTitle">分享你的靈魂果酥</h2>
+      <p>系統會先產生並下載結果圖片，再開啟分享方式。</p>
+      <div class="share-grid">
+        <button type="button" class="share-choice native" id="nativeShareButton">
+          <span>📱</span><strong>手機分享</strong><small>圖片＋文字＋網址</small>
+        </button>
+        <button type="button" class="share-choice line" id="lineShareButton">
+          <span>LINE</span><strong>分享到 LINE</strong><small>下載圖片＋分享網址</small>
+        </button>
+        <button type="button" class="share-choice facebook" id="facebookShareButton">
+          <span>f</span><strong>分享到 Facebook</strong><small>下載圖片＋分享網址</small>
+        </button>
+        <button type="button" class="share-choice download" id="downloadButton">
+          <span>↓</span><strong>下載結果圖片</strong><small>PNG 圖檔</small>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
