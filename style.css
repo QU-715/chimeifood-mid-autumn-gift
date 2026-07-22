@@ -61,7 +61,7 @@ h1 span { color: var(--orange); }
 .match-label { font-weight: 900; }
 .match-row strong { font-size: 40px; line-height: 1; }
 .result-card { overflow: hidden; border-radius: 26px; background: #fffaf1; border: 1px solid var(--line); box-shadow: 0 16px 32px rgba(102,57,35,.12); text-align: left; }
-.result-card img { display: block; width: 100%; height:auto; object-fit:contain; background: #f7ead9; }
+.result-card img { display: block; width: 100%; height: auto; object-fit: contain; background: #f7ead9; }
 .result-copy { padding: 28px; }
 .result-type { margin: 0 0 6px; color: var(--orange); font-size: 14px; font-weight: 900; letter-spacing: .12em; }
 .result-copy h3 { margin: 0; font-size: clamp(30px, 6vw, 48px); line-height: 1.2; }

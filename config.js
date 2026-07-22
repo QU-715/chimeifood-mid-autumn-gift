@@ -7,6 +7,6 @@
 */
 window.QUIZ_CONFIG = {
   GA4_ID: "G-KVBX4J8LHD",
-  SITE_URL: "https://qu-715.github.io/chimeifood-mid-autumn-gift/",
+  SITE_URL: "https://reurl.cc/MWAOGK",
   BUY_URL: "https://reurl.cc/VnENgZ"
 };

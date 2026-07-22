@@ -342,10 +342,6 @@ async function createShareImageBlob() {
   ctx.font = '700 24px "Microsoft JhengHei", sans-serif';
   ctx.fillText("快來測你的命定水果酥", W / 2, 1252);
 
-  ctx.fillStyle = "#ad431f";
-  ctx.font = '700 22px Arial, sans-serif';
-  ctx.fillText(SITE_URL.replace(/^https?:\/\//, ""), W / 2, 1295);
-
   cachedShareBlob = await new Promise((resolve, reject) => {
     canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("無法產生圖片")), "image/png", 0.95);
   });
@@ -372,7 +368,9 @@ async function downloadResultImage(trackEvent = true) {
 
 function shareText() {
   const result = results[lastResultKey];
-  return `我測出我的靈魂果酥是【${result.name}】！契合度 ${lastMatch}% 🎁\n快來測你的命定水果酥：\n${SITE_URL}`;
+  return `我測出我的靈魂果酥是【${result.name}】！契合度 ${lastMatch}% 🎁
+快來測你的命定水果酥：
+https://reurl.cc/MWAOGK`;
 }
 
 async function copyShareText() {
@@ -399,7 +397,7 @@ async function nativeShare() {
   const result = results[lastResultKey];
   const blob = await createShareImageBlob();
   const file = new File([blob], fileName(), { type: "image/png" });
-  const data = { title: "奇美水果酥心理測驗", text: shareText(), url: SITE_URL, files: [file] };
+  const data = { title: "奇美水果酥心理測驗", text: shareText(), files: [file] };
 
   try {
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -408,7 +406,7 @@ async function nativeShare() {
       track("share", { method: "native_file", content_type: "result_image", item_id: lastResultKey });
     } else if (navigator.share) {
       await downloadResultImage(false);
-      await navigator.share({ title: data.title, text: data.text, url: SITE_URL });
+      await navigator.share({ title: data.title, text: data.text });
       $("#shareStatus").textContent = "結果圖片已下載，分享視窗已開啟。";
       track("share", { method: "native_url", content_type: "quiz_result", item_id: lastResultKey });
     } else {
@@ -427,23 +425,31 @@ async function nativeShare() {
   }
 }
 
-async function lineShare() {
-  await downloadResultImage(false);
-  await copyShareText().catch(() => {});
-  const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(SITE_URL)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
-  $("#shareStatus").textContent = "結果圖片已下載，LINE 分享頁已開啟；可將圖片一併傳送。";
-  track("share", { method: "line", content_type: "quiz_result", item_id: lastResultKey });
-  closeShareModal();
-}
 
-async function facebookShare() {
-  await downloadResultImage(false);
-  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SITE_URL)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
-  $("#shareStatus").textContent = "結果圖片已下載，Facebook 分享頁已開啟；可將圖片加入貼文。";
-  track("share", { method: "facebook", content_type: "quiz_result", item_id: lastResultKey });
-  closeShareModal();
+async function saveResultImage() {
+  const blob = await createShareImageBlob();
+  const file = new File([blob], fileName(), { type: "image/png" });
+
+  try {
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: "儲存奇美水果酥測驗結果",
+        files: [file]
+      });
+      $("#shareStatus").textContent = "請在系統選單中選擇「儲存圖片」或「儲存到相簿」。";
+      track("result_image_save", { method: "native_share", result_key: lastResultKey });
+    } else {
+      await downloadResultImage();
+      $("#shareStatus").textContent = "瀏覽器不支援直接存入相簿，圖片已下載到檔案／下載項目。";
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      await downloadResultImage();
+      $("#shareStatus").textContent = "無法開啟相簿儲存，圖片已下載到檔案／下載項目。";
+    }
+  } finally {
+    closeShareModal();
+  }
 }
 
 $("#startButton").addEventListener("click", startQuiz);
@@ -453,13 +459,7 @@ $("#retryButton").addEventListener("click", () => {
 });
 $("#shareButton").addEventListener("click", openShareModal);
 $("#nativeShareButton").addEventListener("click", nativeShare);
-$("#lineShareButton").addEventListener("click", lineShare);
-$("#facebookShareButton").addEventListener("click", facebookShare);
-$("#downloadButton").addEventListener("click", async () => {
-  await downloadResultImage();
-  $("#shareStatus").textContent = "結果圖片已下載。";
-  closeShareModal();
-});
+$("#downloadButton").addEventListener("click", saveResultImage);
 document.querySelectorAll("[data-close-share]").forEach((el) => el.addEventListener("click", closeShareModal));
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !$("#shareModal").hidden) closeShareModal();
